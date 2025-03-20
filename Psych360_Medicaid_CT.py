@@ -194,7 +194,7 @@ class primary_CT():
         fil.text_box(xpath,heding,status,key)
 
         xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[3]/div[1]/div/div/div/fieldset/table/tbody/tr[3]/td/a"
-        heding="Login"
+        heding="Login"        
         status="Login Button Not Found"
         fil.click(xpath,heding,status)
         
