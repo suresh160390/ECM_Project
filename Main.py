@@ -5,6 +5,8 @@ from Psych360_Medicaid_CT import *
 import traceback
 import pandas as pd
 import pyodbc
+from datetime import datetime
+import pytz
 
 
 class login_db():
@@ -138,21 +140,33 @@ class update(login_db):
         self.myconn=self._login_db__connection_string
 
     def update_qry(self):
-        try:
+        try:            
             conn = pyodbc.connect(self.myconn)
             cursor = conn.cursor()
-            cursor.execute("UPDATE rules.MCDConfiguration SET userName = 'Sathishbilling', password='Password$2024' WHERE state = 'OH'")                    
+            
+            utc_zone = pytz.utc
+            local_zone = pytz.timezone('America/New_York')
+            utc_time = datetime.now(utc_zone)
+            local_time = utc_time.astimezone(local_zone)
+                       
+            # cursor.execute("UPDATE rules.MCDConfiguration SET userName = 'Sathishbilling', password='Password$2024' WHERE state = 'OH'")                    
+            cursor.execute("UPDATE rules.MCDConfiguration SET modifiedDate = ? WHERE state = 'CT'",local_time)
+            # cursor.execute('''
+            #                     INSERT INTO rules.MCDConfiguration 
+            #                     (accountId, [state], [websitetURL], userName, [password], isActive, createdBy, createdDate, modifiedBy, modifiedDate) 
+            #                     VALUES (43, 'CT', 'https://www.ctdssmap.com/CTPortal/Provider', 'SAIHEALTHDRIVE', 'January@2025', 1, 1, GETDATE(), 1, GETDATE())
+            #                 ''')
             conn.commit()
             cursor.close()
             conn.close()
             print('Update Sussesfull...')
         except Exception as e:
-            print('Login Database Error')
+            print('Login Database Error' + e)
             return
         
 if  __name__ == '__main__':
-    obj = start()
-    obj.main_process()
+    # obj = start()
+    # obj.main_process()
 
-    # obj=update()
-    # obj.update_qry()
+    obj=update()
+    obj.update_qry()
