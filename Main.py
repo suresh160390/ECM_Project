@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from Medicaid_TX import *
 from Psych360_Medicaid_OH import *
+from Psych360_Medicaid_CT import *
 import traceback
 import pandas as pd
 import pyodbc
@@ -117,6 +118,13 @@ class start(login_db):
                     self.ck.reindex(columns=required_columns, fill_value='')
                     obj_OH = fin_out_OH()
                     obj_OH.final_process_OH(self.ck,url,usr_nm,pass_word)
+                elif st=='CT':
+                    required_columns = ['']
+                    
+                    self.ck.reindex(columns=required_columns, fill_value='')
+                    obj_CT = fin_out_CT()
+                    obj_CT.final_process_CT(self.ck,url,usr_nm,pass_word)
+
         except Exception as e:
             print(f"Error connecting to the database: {e}")
             print(traceback.format_exc()) 
