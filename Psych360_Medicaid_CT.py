@@ -79,7 +79,7 @@ class functionss():
     
     def text_box(self,xpath,heding,status,key):
         counter = 0
-        while counter < 15:
+        while counter < 30:
             try:   
                 WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).clear()                   
                 WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).send_keys(key)
@@ -92,7 +92,7 @@ class functionss():
     
     def text_box_key(self,xpath,heding,status,key):                
         counter = 0
-        while counter < 15:
+        while counter < 30:
             try:   
                 element = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, xpath)))
                 element.send_keys(key)
@@ -106,7 +106,7 @@ class functionss():
     
     def click(self,xpath,heding,status):
         counter = 0
-        while counter < 15:
+        while counter < 30:
             try:             
                 WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH,xpath))).click()
                 break
@@ -119,7 +119,7 @@ class functionss():
     def count(self,xpath,heding,status):
         global rows
         counter = 0
-        while counter < 15:
+        while counter < 30:
             try:             
                 rows=len(WebDriverWait(driver, 0).until(EC.presence_of_all_elements_located((By.XPATH,xpath))))                    
                 break
@@ -132,7 +132,7 @@ class functionss():
     def count_1(self,xpath,heding,status):
         global rows_1
         counter = 0
-        while counter < 15:
+        while counter < 30:
             try:             
                 rows_1=len(WebDriverWait(driver, 0).until(EC.presence_of_all_elements_located((By.XPATH,xpath))))                    
                 break
@@ -212,31 +212,35 @@ class primary_CT():
         
         page_title = driver.title
 
+        time.sleep(1)
+
         if page_title.lstrip().rstrip()=='Secure Site':                               
             self._pass = 'Medicaid CT - Username & Password Incorrect'
             return                                     
                                     
         for index, row in self._fin1.iterrows():                          
             try:
-                c_id = row[0]  
-                add_zer=row[1]
-                p_acn = row[2]            
-                dx = row[3]                 
-                f_dos=row[4]                                    
-                pro=row[5]
-                mod=row[6]
-                ftc=row[7]
-                amt=row[8]
-                ren_phy=row[9]
-                mp_dt=row[10]
-                mc_amt=row[11]
-                mp_amt=row[12]
-                md_amt=row[13]
-                mcins_amt=row[14]
-                avrs=row[15]
+                c_id = row[0]                 
+                p_acn = row[1]            
+                dx = row[2]                 
+                f_dos=row[3]                                    
+                pro=row[4]
+                mod=row[5]
+                ftc=row[6]
+                amt=row[7]
+                ren_phy=row[8]
+                mp_dt=row[9]
+                mc_amt=row[10]
+                mp_amt=row[11]
+                md_amt=row[12]
+                mcins_amt=row[13]
+                avrs=row[14]
 
-                avrs_1 = '00' + str(avrs)
+                # avrs_1 = '00' + str(avrs)
                 
+                if 1 <= len(avrs.strip()) <= 9:
+                    avrs = avrs.strip().zfill(9)
+
                 wait = WebDriverWait(driver, 20)
                 wait.until(lambda driver: driver.execute_script("return document.readyState === 'complete';"))
                 
@@ -291,7 +295,7 @@ class primary_CT():
                     while j<rows+1:     
                         xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/table/tbody/tr[{}]/td[3]"    
                         cnm=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath.format(j)))).text
-                        if cnm.lstrip().rstrip()==avrs_1.lstrip().rstrip():
+                        if cnm.lstrip().rstrip()==avrs.lstrip().rstrip():
                             WebDriverWait(driver, 0).until(EC.element_to_be_clickable((By.XPATH,xpath.format(j)))).click()  
 
                             xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/span[2]/table/tbody/tr/td/table/tbody/tr[1]/td[5]/table/tbody/tr/td/a"
@@ -343,12 +347,10 @@ class primary_CT():
                         break
                     j=j+1       
                 
-                if pd.isnull(add_zer):
-                    c_id = str(c_id)
-                elif add_zer.lower().lstrip().rstrip()=='add':
-                    c_id ='00' + str(c_id)
-                else:
-                    c_id = str(c_id)
+                c_id = str(c_id)
+
+                if 1 <= len(c_id.strip()) <= 9:
+                    c_id = c_id.strip().zfill(9)
 
                 fil.Alert()
 
