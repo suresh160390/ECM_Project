@@ -170,10 +170,22 @@ class primary_CT():
 
         self._fin =  filtered_data
 
-        self._fin.loc[:,'Status']=''
-        self._fin.loc[:,'ICN - Number']=''
-        self._fin.loc[:,'Paid Amount']=''
-        self._fin.loc[:,'Final - Status']=''
+        self._fin.loc[:,'Claim Status']=''
+        self._fin.loc[:,'Code1']=''
+        self._fin.loc[:,'Description1']=''
+        self._fin.loc[:,'Code2']=''
+        self._fin.loc[:,'Description2']=''
+        self._fin.loc[:,'Code3']=''
+        self._fin.loc[:,'Description3']=''
+        self._fin.loc[:,'Code4']=''
+        self._fin.loc[:,'Description4']=''
+        self._fin.loc[:,'Code5']=''
+        self._fin.loc[:,'Description5']=''
+        self._fin.loc[:,'Claim Number']=''
+        self._fin.loc[:,'Claim Paid']=''
+        self._fin.loc[:,'Final Status']=''
+
+        # self._fin['AVRS ID#'] = pd.to_numeric(self._fin['AVRS ID#'], errors='coerce').astype('float').astype('Int64')
 
         self._fin1 = self._fin.head(3).reset_index(drop=True)
 
@@ -203,11 +215,7 @@ class primary_CT():
         if page_title.lstrip().rstrip()=='Secure Site':                               
             self._pass = 'Medicaid CT - Username & Password Incorrect'
             return                                     
-                    
-        # file=pd.read_excel(fil,sheet_name='Medicaid Submission',header=0)        
-
-        # file['AVRS ID#'] = pd.to_numeric(file['AVRS ID#'], errors='coerce').astype('float').astype('Int64')
-
+                                    
         for index, row in self._fin1.iterrows():                          
             try:
                 c_id = row[0]  
@@ -451,7 +459,7 @@ class primary_CT():
                 key=mcins_amt
                 fil.text_box(xpath,heding,status,key)
                 
-                self._fin1.at[index, 'Final - Status'] = 'Done'  
+                self._fin1.at[index, 'Final Status'] = 'Done'  
 
                 # xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/span[2]/table/tbody/tr/td[3]/table/tbody/tr/td[1]/a"
                 # heding="Submit"
@@ -466,13 +474,13 @@ class primary_CT():
                 # cnm = cnm.get_attribute("value") 
                 
                 # if cnm.lstrip().rstrip()=='Not Submitted yet':                    
-                #     self._fin1.at[index, 'Final - Status'] = 'Error'  
+                #     self._fin1.at[index, 'Final Status'] = 'Error'  
                 # else:      
                                                     
                 #     xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/span/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[1]/td[2]/input"
                 #     cs=WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH,xpath)))  
                 #     cs = cs.get_attribute("value") 
-                #     self._fin1.at[index, 'Final - Status'] = cs
+                #     self._fin1.at[index, 'Claim Status'] = cs
 
                 #     if cs=='DENIED':
                 #         try:
@@ -482,8 +490,8 @@ class primary_CT():
                 #             xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/table/tbody/tr[3]/td[3]"                                 
                 #             dec1=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).text
                             
-                #             self._fin1.at[index, 'Final - Status'] = cd1
-                #             self._fin1.at[index, 'Final - Status'] = dec1
+                #             self._fin1.at[index, 'Code1'] = cd1
+                #             self._fin1.at[index, 'Description1'] = dec1
                 #         except Exception as e:
                 #             pass
                         
@@ -494,8 +502,8 @@ class primary_CT():
                 #             xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/table/tbody/tr[4]/td[3]"                                 
                 #             dec2=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).text
 
-                #             self._fin1.at[index, 'Final - Status'] = cd2
-                #             self._fin1.at[index, 'Final - Status'] = dec2
+                #             self._fin1.at[index, 'Code2'] = cd2
+                #             self._fin1.at[index, 'Description2'] = dec2
                 #         except Exception as e:
                 #             pass
                         
@@ -506,8 +514,8 @@ class primary_CT():
                 #             xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/table/tbody/tr[5]/td[3]"                                 
                 #             dec3=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).text
 
-                #             self._fin1.at[index, 'Final - Status'] = cd3
-                #             self._fin1.at[index, 'Final - Status'] = dec3
+                #             self._fin1.at[index, 'Code3'] = cd3
+                #             self._fin1.at[index, 'Description3'] = dec3
                 #         except Exception as e:
                 #             pass
                         
@@ -518,8 +526,8 @@ class primary_CT():
                 #             xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/table/tbody/tr[6]/td[3]"                                 
                 #             dec4=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).text
 
-                #             self._fin1.at[index, 'Final - Status'] = cd4
-                #             self._fin1.at[index, 'Final - Status'] = dec4
+                #             self._fin1.at[index, 'Code4'] = cd4
+                #             self._fin1.at[index, 'Description4'] = dec4
                 #         except Exception as e:
                 #             pass
 
@@ -530,24 +538,24 @@ class primary_CT():
                 #             xpath="/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/table/tbody/tr[7]/td[3]"                                 
                 #             dec5=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath))).text
 
-                #             self._fin1.at[index, 'Final - Status'] = cd5
-                #             self._fin1.at[index, 'Final - Status'] = dec5
+                #             self._fin1.at[index, 'Code5'] = cd5
+                #             self._fin1.at[index, 'Description5'] = dec5
                 #         except Exception as e:
                 #             pass
 
                 #     xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/span/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[2]/td[2]/input"
                 #     c_icn=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath.format(j))))
                 #     c_icn = c_icn.get_attribute("value") 
-                #     self._fin1.at[index, 'Final - Status'] = c_icn
+                #     self._fin1.at[index, 'Claim Number'] = c_icn
 
                 #     xpath= "/html/body/form/div[3]/table/tbody/tr[1]/td[2]/table[3]/tbody/tr/td/table/tbody/tr/td[2]/div[2]/div/div/div/div/div[2]/table/tbody/tr/td/table/tbody/tr[2]/td/div/div[5]/span/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr[5]/td[2]/input"
                 #     p_amt=WebDriverWait(driver, 0).until(EC.visibility_of_element_located((By.XPATH,xpath.format(j))))
                 #     p_amt = p_amt.get_attribute("value") 
-                #     self._fin1.at[index, 'Final - Status'] = p_amt
+                #     self._fin1.at[index, 'Claim Paid'] = p_amt
                                                                                                                                                                             
-                #     self._fin1.at[index, 'Final - Status'] = 'Done'                
+                #     self._fin1.at[index, 'Final Status'] = 'Done'                
             except Exception as e:
-                self._fin1.at[index, 'Final - Status'] = 'Error'                                      
+                self._fin1.at[index, 'Final Status'] = 'Error'                                      
                                                      
 class fin_out_CT(primary_CT):
     def __init__(self):
