@@ -15,6 +15,7 @@ class login_db():
         self.__df=None        
         self.__tph=None
         self._err=None
+        self.data=None
 
         load_dotenv()      
 
@@ -72,13 +73,39 @@ class login_db():
             return None
             
         return self.__df
+    
+    def db_write_fin(self,data,column,state):
+        try:           
+            conn = pyodbc.connect(self.__connection_string)
+            cursor = conn.cursor()
 
+            if state=='TX':
+                query = f"INSERT INTO rules.MCDConfiguration ({column}) VALUES (?)"
+                cursor.execute(query, data)
+            elif state=='OH':                    
+                query = f"INSERT INTO rules.MCDConfiguration ({column}) VALUES (?)"
+                cursor.execute(query, data)               
+            elif state=='CT':                    
+                query = f"INSERT INTO rules.MCDConfiguration ({column}) VALUES (?)"
+                cursor.execute(query, data) 
+                                            
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+        except Exception as e:
+            self._err = 'DB Write Database Connection Error'
+            return None
+        
 class start(login_db):
     def __init__(self):
         super().__init__()
         self._fin=None
         self._tph=None
         self._err = None
+        self._fin_TX=None
+        self._fin_OH=None
+        self._fin_CT=None
 
     def main_process(self):        
         try:
@@ -89,7 +116,7 @@ class start(login_db):
                 return
             
             self._tph = self.db_data()
-                       
+                           
             if self._err:
                 print(self._err)
                 return
@@ -111,27 +138,39 @@ class start(login_db):
                                     'Zip+4','Gender','Patient date of birth','ID Type','EIN/SSN','Qualifier','Code','DOS','placeOfService',
                                     'Proc ID','Proc','Diag Ref','Qty/Units','Unit Price','NPI/API']
                     
-                    self.ck.reindex(columns=required_columns, fill_value='')
+                    self.ck=self.ck.reindex(columns=required_columns, fill_value='')
                     obj_TX = fin_out()
-                    obj_TX.final_process(self.ck,url,usr_nm,pass_word)
+                    self._fin_TX=obj_TX.final_process(self.ck,url,usr_nm,pass_word)
+                    
+                    print(self._fin_TX)
+                    
+                    # self.db_write_fin(self._fin_TX,required_columns,st)                   
+
                 elif st=='OH':
                     required_columns = ['']
                     
-                    self.ck.reindex(columns=required_columns, fill_value='')
+                    self.ck=self.ck.reindex(columns=required_columns, fill_value='')
                     obj_OH = fin_out_OH()
-                    obj_OH.final_process_OH(self.ck,url,usr_nm,pass_word)
+                    self._fin_OH=obj_OH.final_process_OH(self.ck,url,usr_nm,pass_word)
+
+                    print(self._fin_OH)
+
+                    # self.db_write_fin(self._fin_OH,required_columns,st)    
+
                 elif st=='CT':
                     required_columns = ['']
                     
-                    self.ck.reindex(columns=required_columns, fill_value='')
+                    self.ck=self.ck.reindex(columns=required_columns, fill_value='')
                     obj_CT = fin_out_CT()
-                    obj_CT.final_process_CT(self.ck,url,usr_nm,pass_word)
-
+                    self._fin_CT=obj_CT.final_process_CT(self.ck,url,usr_nm,pass_word)
+                    
+                    print(self._fin_CT)
+                    # self.db_write_fin(self._fin_CT,required_columns,st)   
         except Exception as e:
             print(f"Error connecting to the database: {e}")
             print(traceback.format_exc()) 
 
-        print('Compted Online Submittion Process...')
+        print('Completed Online Submittion Process...')
 
 class update(login_db):
     def __init__(self):
@@ -163,10 +202,12 @@ class update(login_db):
         except Exception as e:
             print('Login Database Error' + e)
             return
-        
-if  __name__ == '__main__':
-    # obj = start()
-    # obj.main_process()
 
-    obj=update()
-    obj.update_qry()
+
+
+if  __name__ == '__main__':
+    obj = start()
+    obj.main_process()
+
+    # obj=update()
+    # obj.update_qry()
